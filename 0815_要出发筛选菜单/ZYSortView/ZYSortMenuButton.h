@@ -13,8 +13,17 @@ typedef NS_ENUM(NSInteger, ButtonSelectType) {
     ButtonSelectTypeSelected = 1
 };
 
+
+
 @interface ZYSortMenuButton : UIButton
+
+
+@property (nonatomic, strong)UIView *splitLine;
+
 - (void)setSelectStatus:(ButtonSelectType)buttonSelectedType;
 
+- (void)addSplitLine;
+//最后一个btn需要隐藏分割线
+- (void)hiddenSplitline;
 
 @end

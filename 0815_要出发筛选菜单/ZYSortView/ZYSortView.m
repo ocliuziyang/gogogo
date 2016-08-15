@@ -24,9 +24,12 @@
         _menuCount = menuCount;
         _currentSelectedIndex = -1;
         _isShow = NO;
+        
+       NSArray *_titleArray = @[@"推荐排序", @"全部分类", @"筛选", @"请添加", @"请添加"];
+        
         for (int i = 0; i < menuCount; i++) {
             ZYSortMenuButton *menuBtn = [ZYSortMenuButton buttonWithType:UIButtonTypeCustom];
-            
+            [menuBtn addSplitLine];
             //菜单按钮宽度
             CGFloat menuBtnWidth = self.frame.size.width / menuCount;
             
@@ -39,7 +42,12 @@
             
             //按钮标题
             //设置按钮标题
-            [menuBtn setTitle:@"推荐排序" forState:UIControlStateNormal];
+            
+            [menuBtn setTitle:_titleArray[i] forState:UIControlStateNormal];
+            
+            if (i == menuCount - 1) {
+                menuBtn.splitLine.hidden = YES;
+            }
             
             [self addSubview:menuBtn];
         }
@@ -53,6 +61,7 @@
 //响应menuBtn的点击事件
 - (void)menuBtnClick:(ZYSortMenuButton *)menuBtn {
     NSInteger index = menuBtn.tag - 100;
+    
     
     //如果当前点击选中的 和 之前显示的是 同一个位置的话
     if(_currentSelectedIndex == index) {
@@ -70,19 +79,20 @@
                 
                 [self setSelectedMenuBtn:menuBtn];
                 //单选cell
+                NSLog(@"%ld", index);
             }
                 break;
             case 1:
             {
                 [self setSelectedMenuBtn:menuBtn];
-                
-                //单选
+                NSLog(@"%ld", index);
+                //单选cell
             }
                 break;
             case 2:
             {
                 [self setSelectedMenuBtn:menuBtn];
-               
+               NSLog(@"%ld", index);
                 //多选
             }
                 break;
@@ -95,7 +105,7 @@
         //记录点击的按钮
         _currentSelectedIndex = index;
     }
-    
+
 }
 
 
@@ -111,7 +121,7 @@
     [menuBtn setSelectStatus:ButtonSelectTypeSelected];
 }
 
-//添加分割线
+//添加横向分割线
 - (void)separation {
     
     CGFloat lineWidth = 1;
@@ -126,21 +136,83 @@
     
 }
 
+@end
+
+/**############### 选项视图 ZYSortMenuView   ###################**/
+#define keyTitle @"keyTitle"
+#define keyOrderBy @"OrderBy"
+static NSString * const sortMenuCell = @"ZYSortMenuViewCell";
+@interface ZYSortMenuView ()<UITableViewDataSource, UITableViewDelegate>
 
 @end
+
+@implementation ZYSortMenuView {
+    UITableView *_tableView;
+    NSArray *_dataSource;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame withMenuType:(MenuType)menuType menuDataArray:(NSArray *)menuDataArray{
+    if (self = [super initWithFrame:frame]) {
+        _tableView = [[UITableView alloc]init];
+        [self addSubview:_tableView];
+        _tableView.dataSource = self;
+        _tableView.delegate = self;
+        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:sortMenuCell];
+        _dataSource = menuDataArray;
+    }
+    return self;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 4;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:sortMenuCell];
+    
+    cell.textLabel.text = @"测试菜单";
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSString *title = [_dataSource[0] objectForKey:keyTitle];
+    NSLog(@"%@", title);
+}
+
+
+- (void)layoutSubviews {
+    CGFloat tabelViewH = [_dataSource[0] count] * 45;
+    _tableView.frame = CGRectMake(0, 44, SCREEN_WIDTH_ZY, tabelViewH);
+    
+}
+
+
+@end
+
+
 /**###############  ZYSortView   ###################**/
+
+@interface ZYSortView ()
+
+@property (nonatomic, strong)ZYSortMenuView *sortMenuView;
+
+@end
+
 @implementation ZYSortView {
     UITableView *_tableView;
     ZYSortBar *_sortBar;
+    ZYSortMenuView *_sortMenuView;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)count{
+- (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)count menuDataArray:(NSArray *)dataArray{
     
     if (self = [super initWithFrame:frame]) {
         _sortBar = [[ZYSortBar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44) withMenuCount:count];
         [self addSubview:_sortBar];
         
-        
+        _sortMenuView = [[ZYSortMenuView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_sortBar.frame), SCREEN_WIDTH_ZY, SCREEN_HEIGHT_ZY - CGRectGetMaxY(_sortBar.frame)) withMenuType:MenuTypeTableView menuDataArray:dataArray];
+        [self addSubview:_sortMenuView];
         
     }
     return self;

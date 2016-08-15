@@ -9,8 +9,12 @@
 #import "ViewController.h"
 #import "ZYSortView.h"
 
+#define keyTitle @"keyTitle"
+#define keyOrderBy @"OrderBy"
+
 @interface ViewController ()
 
+@property (nonatomic, strong)NSArray *menuDataSource;
 @end
 
 @implementation ViewController
@@ -20,7 +24,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     [self initNavBar];
     
-    ZYSortView *sortView = [[ZYSortView alloc]initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH_ZY, 45) withMenuCount:3];
+    ZYSortView *sortView = [[ZYSortView alloc]initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH_ZY, 45) withMenuCount:3 menuDataArray:self.menuDataSource];
     [self.view addSubview:sortView];
     
 }
@@ -38,5 +42,65 @@
     [self.view addSubview:navBar];
     
 }
+
+//菜单数据源
+- (NSArray *)menuDataSource {
+    
+    if (!_menuDataSource) {
+        _menuDataSource = @[
+                            @[
+                                @{
+                                    keyTitle : @"智能排序",
+                                    keyOrderBy : @0,//推荐
+                                    },
+                                @{
+                                    keyTitle : @"销量优先",
+                                    keyOrderBy : @1,//
+                                    },
+                                @{
+                                    keyTitle : @"最近更新",
+                                    keyOrderBy : @2,//
+                                    },
+                                @{
+                                    keyTitle : @"价格最低",
+                                    keyOrderBy : @3,//
+                                    }
+                                ],
+                            
+                            @[
+                                //旅游方式
+                                @{
+                                    keyTitle : @"全部分类",
+                                    keyOrderBy : @0,
+                                    },
+                                @{
+                                    keyTitle : @"跟团旅游",
+                                    keyOrderBy : @1,
+                                    },
+                                @{
+                                    keyTitle : @"半自由行",
+                                    keyOrderBy : @2,
+                                    },
+                                @{
+                                    keyTitle : @"高端定制",
+                                    keyOrderBy : @3,
+                                    },
+                                ],
+                            
+                            @[
+                                @{
+                                    keyTitle : @"筛选",
+                                    }
+                                ],
+                            
+                            ];
+    }
+    
+    
+    return _menuDataSource;
+}
+
+
+
 
 @end

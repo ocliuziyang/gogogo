@@ -16,10 +16,16 @@
 - (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)menuCount;
 @end
 
-@interface ZYSortMenuView : UIView
 
+
+typedef NS_ENUM(NSInteger, MenuType) {
+    MenuTypeTableView,
+    MenuTypeCollection
+};
+@interface ZYSortMenuView : UIView
+- (instancetype)initWithFrame:(CGRect)frame withMenuType:(MenuType)menuType menuDataArray:(NSArray *)menuDataArray;
 @end
 
 @interface ZYSortView : UIView
-- (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)count;
+- (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)count menuDataArray:(NSArray *)dataArray;
 @end
