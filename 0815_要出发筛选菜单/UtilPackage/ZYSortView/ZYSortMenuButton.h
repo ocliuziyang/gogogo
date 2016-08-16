@@ -13,8 +13,6 @@ typedef NS_ENUM(NSInteger, ButtonSelectType) {
     ButtonSelectTypeSelected = 1
 };
 
-
-
 @interface ZYSortMenuButton : UIButton
 
 
