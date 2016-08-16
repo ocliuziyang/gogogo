@@ -34,7 +34,7 @@
     [self initView];
     
     ZYSortView *sortView = [[ZYSortView alloc]initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH_ZY, 44) withMenuCount:3 menuDataArray:self.menuDataSource];
-    [self.view addSubview:sortView];
+    [self.view addSubview:sortView];//先添加到self,再设置代理,顺序不能乱
     sortView.delegate = self;
     
    
@@ -91,6 +91,14 @@
 }
 
 #pragma mark - TableView Delegate
+
+
+#pragma mark - ZYSortViewDelegate
+- (void)sortView:(ZYSortView *)sortView didSelected:(ZYIndexPath *)indexPath {
+    
+    NSLog(@"点击了%ld个, %ld行", indexPath.column, indexPath.row);
+    
+}
 
 #pragma mark - Getter
 //当前产品列表模拟数据源

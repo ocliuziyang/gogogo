@@ -21,7 +21,7 @@
         _currentSelectedIndex = -1;
         _isShow = NO;
         
-       NSArray *_titleArray = @[@"推荐排序", @"全部分类", @"筛选", @"请添加", @"请添加"];
+       NSArray *_titleArray = @[@"智能排序", @"全部分类", @"筛选", @"请添加", @"请添加"];
         
         for (int i = 0; i < menuCount; i++) {
             ZYSortMenuButton *menuBtn = [ZYSortMenuButton buttonWithType:UIButtonTypeCustom];
@@ -156,7 +156,8 @@
 /**############### 选项视图 ZYSortMenuView   ###################**/
 #define keyTitle @"keyTitle"
 #define keyOrderBy @"OrderBy"
-static NSString * const sortMenuCell = @"ZYSortMenuViewCell";
+
+static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
 @interface ZYSortMenuView ()
 
 @end
@@ -173,11 +174,8 @@ static NSString * const sortMenuCell = @"ZYSortMenuViewCell";
         _dataSource = menuDataArray;
         _tableView.bounces = YES;
         _tableView.tableFooterView = [UIView new];
-        
-        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:sortMenuCell];
-        
-        
-        
+    
+        [_tableView registerNib:[UINib nibWithNibName:@"ZYMenuRadioCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:zyMenuRadioCell];
         
     }
     return self;
@@ -201,6 +199,25 @@ static NSString * const sortMenuCell = @"ZYSortMenuViewCell";
 
 @end
 
+/*###########   ZYIndexPath      ###########*/
+@implementation ZYIndexPath
+
+- (instancetype)initWitCol:(NSInteger)col row:(NSInteger)row
+{
+    self = [super init];
+    if (self) {
+        _column = col;
+        _row = row;
+        
+    }
+    return self;
+}
+
++ (instancetype)indexPathWitCol:(NSInteger)col row:(NSInteger)row {
+    return [[ZYIndexPath alloc]initWitCol:col row:row];
+}
+
+@end
 
 /**###############  ZYSortView   ###################**/
 #define keyTitle @"keyTitle"
@@ -216,13 +233,16 @@ static NSString * const sortMenuCell = @"ZYSortMenuViewCell";
 @implementation ZYSortView {
     //记录当前点击位置
     ClickMenuBtnType _currentClickMenuBtnType;
-    
+    //记录点击的单选项目
+    ZYIndexPath *_previousIndexPathFirst;
+    ZYIndexPath *_previousIndexPathSec;
+    ZYIndexPath *_previousIndexPathThird;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)count menuDataArray:(NSArray *)dataArray{
     
     if (self = [super initWithFrame:frame]) {
-  
+        
         //初始化记录点击位置
         _currentClickMenuBtnType = -1;
         _dataarray = dataArray;
@@ -335,12 +355,8 @@ static NSString * const sortMenuCell = @"ZYSortMenuViewCell";
         [self.superview addSubview:_sortMenuView];
         //初始逻辑应该先隐藏菜单
         _sortMenuView.hidden = YES;
-        
-        
     }
-
 }
-
 
 #pragma mark - UITableView DataSource
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -349,16 +365,53 @@ static NSString * const sortMenuCell = @"ZYSortMenuViewCell";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:sortMenuCell];
     
-
+    ZYMenuRadioCell *cell = [tableView dequeueReusableCellWithIdentifier:zyMenuRadioCell];
     //menu菜单title赋值
-    cell.textLabel.text = @"";
     id menuDict = self.dataarray[indexPath.row];
     if ([menuDict isKindOfClass:[NSDictionary class]]) {
-        cell.textLabel.text = menuDict[keyTitle];
+        cell.titleLabel.text = menuDict[keyTitle];
     }
     
+    //判断显示的哪一个菜单
+    switch (_currentClickMenuBtnType) {
+        case ClickMenuBtnTypeFirst:
+        {
+            //判断是否显示选中符号
+            if (_previousIndexPathFirst.row == indexPath.row) {
+                cell.selectedImgView.hidden = NO;
+            } else {
+                cell.selectedImgView.hidden = YES;
+            }
+        }
+            break;
+        case ClickMenuBtnTypeSec:
+        {
+            //判断是否显示选中符号
+            if (_previousIndexPathSec.row == indexPath.row) {
+                cell.selectedImgView.hidden = NO;
+            }else {
+                cell.selectedImgView.hidden = YES;
+            }
+        }
+            break;
+        case ClickMenuBtnTypeThird:
+        {
+            //判断是否显示选中符号
+            if (_previousIndexPathThird.row == indexPath.row) {
+                cell.selectedImgView.hidden = NO;
+            }else {
+                cell.selectedImgView.hidden = YES;
+            }
+        }
+            break;
+            
+        default:
+            break;
+    }
+
+    
+   
     
     return cell;
 }
@@ -378,8 +431,40 @@ static NSString * const sortMenuCell = @"ZYSortMenuViewCell";
             [btn setTitle:title forState:UIControlStateNormal];
         }
     }
-
     
+    //如果代理存在且 实现了代理方法
+    if(self.delegate && [self.delegate respondsToSelector:@selector(sortView:didSelected:)]) {
+
+        [self.delegate sortView:self didSelected:[ZYIndexPath indexPathWitCol:_currentClickMenuBtnType row:indexPath.row]];
+        
+    }
+    
+    //显示cell选中图片
+    ZYMenuRadioCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.selectedImgView.hidden = NO;
+    
+    //记录点击的对象
+    //记录点击的单选项目 赋值
+    switch (_currentClickMenuBtnType) {
+        case ClickMenuBtnTypeFirst:
+        {
+            _previousIndexPathFirst = [ZYIndexPath indexPathWitCol:0 row:indexPath.row];
+        }
+            break;
+        case ClickMenuBtnTypeSec:
+        {
+            _previousIndexPathSec = [ZYIndexPath indexPathWitCol:1 row:indexPath.row];
+        }
+            break;
+        case ClickMenuBtnTypeThird:
+        {
+            _previousIndexPathThird = [ZYIndexPath indexPathWitCol:2 row:indexPath.row];
+        }
+            break;
+            
+        default:
+            break;
+    }
     
     
 }

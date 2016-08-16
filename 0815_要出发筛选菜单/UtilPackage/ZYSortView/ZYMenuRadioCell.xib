@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ZYMenuRadioCell" id="KGk-i7-Jjw" customClass="ZYMenuRadioCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FXX-h8-Thi">
+                        <rect key="frame" x="20" y="0.0" width="232" height="43.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radio_cell_selected.png" translatesAutoresizingMaskIntoConstraints="NO" id="Z2C-vw-0qj">
+                        <rect key="frame" x="272" y="10" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="25" id="DlL-3u-lKZ"/>
+                            <constraint firstAttribute="width" constant="25" id="tdD-B4-0Lh"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="FXX-h8-Thi" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="63o-rB-xXt"/>
+                    <constraint firstItem="Z2C-vw-0qj" firstAttribute="leading" secondItem="FXX-h8-Thi" secondAttribute="trailing" constant="20" id="8rf-gX-Fvq"/>
+                    <constraint firstItem="FXX-h8-Thi" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="FMT-oJ-RZZ"/>
+                    <constraint firstItem="Z2C-vw-0qj" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="HNu-xM-MBk"/>
+                    <constraint firstAttribute="trailing" secondItem="Z2C-vw-0qj" secondAttribute="trailing" constant="23" id="Xzk-Rk-j6f"/>
+                    <constraint firstAttribute="bottom" secondItem="FXX-h8-Thi" secondAttribute="bottom" id="znb-hK-J1R"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="selectedImgView" destination="Z2C-vw-0qj" id="8Mi-rC-3TD"/>
+                <outlet property="titleLabel" destination="FXX-h8-Thi" id="aqG-XA-V1f"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="radio_cell_selected.png" width="25" height="25"/>
+    </resources>
+</document>

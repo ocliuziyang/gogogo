@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ZYSortMenuButton.h"
+#import "ZYMenuRadioCell.h"
 
 #define SCREEN_WIDTH_ZY [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT_ZY [UIScreen mainScreen].bounds.size.height
@@ -50,11 +51,21 @@ typedef NS_ENUM(NSInteger, MenuType) {
 - (instancetype)initWithFrame:(CGRect)frame withMenuType:(MenuType)menuType menuDataArray:(NSArray *)menuDataArray;
 @end
 
+/*###########   ZYIndexPath      ###########*/
+@interface ZYIndexPath : NSObject
+//回调方法中说明 点击的位置
+@property (nonatomic, assign)NSInteger column;
+@property (nonatomic, assign)NSInteger row;
+- (instancetype)initWitCol:(NSInteger)col row:(NSInteger)row;
++ (instancetype)indexPathWitCol:(NSInteger)col row:(NSInteger)row;
+@end
 
 /*###########   ZYSortView      ###########*/
+@class ZYSortView;
 @protocol ZYSortViewDelegate <NSObject>
 
-
+@optional
+-(void)sortView:(ZYSortView *)sortView didSelected:(ZYIndexPath *)indexPath;
 
 @end
 
