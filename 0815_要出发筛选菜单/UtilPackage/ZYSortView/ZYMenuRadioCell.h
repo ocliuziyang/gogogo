@@ -12,4 +12,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedImgView;
 
+- (void)setCellSelectedStatus:(BOOL)selected;
+
 @end

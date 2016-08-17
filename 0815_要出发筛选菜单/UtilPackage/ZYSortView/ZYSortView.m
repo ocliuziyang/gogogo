@@ -7,6 +7,7 @@
 //
 
 #import "ZYSortView.h"
+#import "ZYCustomView.h"
 
 @implementation ZYSortBar {
     NSInteger _menuCount;
@@ -53,6 +54,19 @@
     }
     return self;
 }
+
+#pragma mark - public methods
+//回复点击状态
+- (void)recoverSortBarBtnStatus {
+    self.isShow = NO;
+    for (UIView *subView in self.subviews) {
+        if ([subView isKindOfClass:[ZYSortMenuButton class]]) {
+            ZYSortMenuButton *btn = (ZYSortMenuButton *)subView;
+            [btn setSelectStatus:ButtonSelectTypeNormal];
+        }
+    }
+}
+
 
 //响应menuBtn的点击事件
 - (void)menuBtnClick:(ZYSortMenuButton *)menuBtn {
@@ -228,6 +242,7 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
 @property (nonatomic, strong)NSArray *dataarray;
 @property (nonatomic, strong)UIView *maskView;
 
+@property (nonatomic, strong)ZYCustomView *customView;
 @end
 
 @implementation ZYSortView {
@@ -249,48 +264,90 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
         _sortBar = [[ZYSortBar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44) withMenuCount:count];
         [self addSubview:_sortBar];
         
-        _sortMenuView = [[ZYSortMenuView alloc] initWithFrame:CGRectMake(0, 108, SCREEN_WIDTH_ZY, SCREEN_HEIGHT_ZY - 108) withMenuType:MenuTypeTableView menuDataArray:_dataarray];
+        CGFloat Y = 108;
+        _sortMenuView = [[ZYSortMenuView alloc] initWithFrame:CGRectMake(0, Y, SCREEN_WIDTH_ZY, SCREEN_HEIGHT_ZY - Y) withMenuType:MenuTypeTableView menuDataArray:_dataarray];
         //一个点击tap事件
         
         _sortMenuView.tableView.dataSource = self;
         _sortMenuView.tableView.delegate = self;
-        
         [self addMaskView];
         
+        //多选collectionView(CustomView)
+        
+        _customView = [[ZYCustomView alloc]initWithFrame:CGRectMake(0, Y, SCREEN_WIDTH_ZY, SCREEN_HEIGHT_ZY - Y) dataArray:dataArray[2]];
+        _customView.backgroundColor = [UIColor whiteColor];
         //弱引用
         __weak typeof(self) weakSelf = self;
+        //点击事件
+        _customView.ensureBtnClickBlock = ^(NSInteger btnTag) {
+          // resetBtn.tag = 200; ensureBtn.tag = 100;  // tap.view.tag = 300;
+            if (btnTag == 100 || btnTag == 300) {
+                weakSelf.customView.hidden = YES;
+                [weakSelf.sortBar recoverSortBarBtnStatus];
+            }
+            
+            NSLog(@"block回调点击了%ld", btnTag);
+            
+        };
+        
         _sortBar.clickMenuBlock = ^(ClickMenuBtnType menuBtnType) {
             //点击了  那个菜单按钮
             NSLog(@"点击了%ld", menuBtnType);
-            //这里来判断点击的时候如果 重复点击的是当前视图
-            if (_currentClickMenuBtnType == menuBtnType) {
-                weakSelf.sortMenuView.hidden = !weakSelf.sortMenuView.hidden;
-            } else {
-                //当前视图正在显示, 又去点击其他视图
-                weakSelf.sortMenuView.hidden = NO;
-                _currentClickMenuBtnType = menuBtnType;
-            }
+            
             
             
 //            数据源更换
             switch (menuBtnType) {
                 case ClickMenuBtnTypeFirst:
                 {
-                    
+                    //隐藏多选视图
+                    weakSelf.customView.hidden = YES;
+                    //这里来判断点击的时候如果 重复点击的是当前视图
+                    if (_currentClickMenuBtnType == menuBtnType) {
+                        weakSelf.sortMenuView.hidden = !weakSelf.sortMenuView.hidden;
+                    } else {
+                        //当前视图正在显示, 又去点击其他视图
+                        weakSelf.sortMenuView.hidden = NO;
+                        _currentClickMenuBtnType = menuBtnType;
+                    }
                     weakSelf.dataarray = dataArray[0];
-                   
+                    [weakSelf.sortMenuView.tableView reloadData];
+                    weakSelf.maskView.frame = CGRectMake(0, CGRectGetMaxY(weakSelf.sortMenuView.tableView.frame), SCREEN_WIDTH_ZY, SCREEN_HEIGHT_ZY - CGRectGetMaxY(self.sortMenuView.tableView.frame));
                 }
                     break;
                 case ClickMenuBtnTypeSec:
                 {
+                    //隐藏多选视图
+                     weakSelf.customView.hidden = YES;
+                    //这里来判断点击的时候如果 重复点击的是当前视图
+                    if (_currentClickMenuBtnType == menuBtnType) {
+                        weakSelf.sortMenuView.hidden = !weakSelf.sortMenuView.hidden;
+                    } else {
+                        //当前视图正在显示, 又去点击其他视图
+                        weakSelf.sortMenuView.hidden = NO;
+                        _currentClickMenuBtnType = menuBtnType;
+                    }
                     weakSelf.dataarray = dataArray[1];
-                  
+                    [weakSelf.sortMenuView.tableView reloadData];
+                    weakSelf.maskView.frame = CGRectMake(0, CGRectGetMaxY(weakSelf.sortMenuView.tableView.frame), SCREEN_WIDTH_ZY, SCREEN_HEIGHT_ZY - CGRectGetMaxY(self.sortMenuView.tableView.frame));
                 }
                     break;
                 case ClickMenuBtnTypeThird:
                 {
-                    weakSelf.dataarray = dataArray[2];
+                    //隐藏单选视图
+                    weakSelf.sortMenuView.hidden = YES;
+                    //这里来判断点击的时候如果 重复点击的是当前视图
+                    if (_currentClickMenuBtnType == menuBtnType) {
+                        weakSelf.customView.hidden = !weakSelf.customView.hidden;
+                    } else {
+                        //当前视图正在显示, 又去点击其他视图
+                        weakSelf.customView.hidden = NO;
+                        _currentClickMenuBtnType = menuBtnType;
+                    }
                     
+                    weakSelf.dataarray = dataArray[2];
+                    //改变多选菜单customView 的状态
+//                    weakSelf.customView.hidden = !weakSelf.customView.hidden;
                 }
                     break;
                     
@@ -298,8 +355,7 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
                     break;
             }
             
-            [weakSelf.sortMenuView.tableView reloadData];
-            weakSelf.maskView.frame = CGRectMake(0, CGRectGetMaxY(weakSelf.sortMenuView.tableView.frame), SCREEN_WIDTH_ZY, SCREEN_HEIGHT_ZY - CGRectGetMaxY(self.sortMenuView.tableView.frame));
+            
         };
         
   
@@ -355,6 +411,10 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
         [self.superview addSubview:_sortMenuView];
         //初始逻辑应该先隐藏菜单
         _sortMenuView.hidden = YES;
+        
+        /*添加多选菜单*/
+        [self.superview addSubview:_customView];
+        _customView.hidden = YES;
     }
 }
 
@@ -379,30 +439,35 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
         {
             //判断是否显示选中符号
             if (_previousIndexPathFirst.row == indexPath.row) {
-                cell.selectedImgView.hidden = NO;
+                [cell setCellSelectedStatus:YES];
             } else {
-                cell.selectedImgView.hidden = YES;
+                [cell setCellSelectedStatus:NO];
+                
             }
+            return cell;
         }
             break;
         case ClickMenuBtnTypeSec:
         {
             //判断是否显示选中符号
             if (_previousIndexPathSec.row == indexPath.row) {
-                cell.selectedImgView.hidden = NO;
-            }else {
-                cell.selectedImgView.hidden = YES;
+                [cell setCellSelectedStatus:YES];
+            } else {
+                [cell setCellSelectedStatus:NO];
+                
             }
+            return cell;
         }
             break;
         case ClickMenuBtnTypeThird:
         {
             //判断是否显示选中符号
-            if (_previousIndexPathThird.row == indexPath.row) {
-                cell.selectedImgView.hidden = NO;
-            }else {
-                cell.selectedImgView.hidden = YES;
-            }
+//            if (_previousIndexPathThird.row == indexPath.row) {
+//                cell.selectedImgView.hidden = NO;
+//            }else {
+//                cell.selectedImgView.hidden = YES;
+//            }
+            return nil;
         }
             break;
             
@@ -413,7 +478,7 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
     
    
     
-    return cell;
+   return cell;
 }
 
 #pragma mark - UITableView Delegate

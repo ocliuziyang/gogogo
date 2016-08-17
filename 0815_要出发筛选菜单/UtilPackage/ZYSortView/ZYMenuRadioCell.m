@@ -12,7 +12,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    _selectedImgView.hidden = YES;
+    [self setCellSelectedStatus:NO];
     
 }
 
@@ -20,6 +20,17 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+- (void)setCellSelectedStatus:(BOOL)selected {
+    
+    if (selected) {
+        _titleLabel.textColor = [UIColor colorWithRed:0.22 green:0.81 blue:0.47 alpha:1.00];
+        _selectedImgView.hidden = NO;
+    } else {
+        _titleLabel.textColor = [UIColor colorWithRed:0.55 green:0.55 blue:0.55 alpha:1.00];
+        _selectedImgView.hidden = YES;
+    }
 }
 
 @end

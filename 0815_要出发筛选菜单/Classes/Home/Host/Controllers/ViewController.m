@@ -11,6 +11,7 @@
 #import "ProductCell.h"
 #import "Product.h"
 #import "AnalogData.h"
+#import "DateHelper.h"
 
 #define keyTitle @"keyTitle"
 #define keyOrderBy @"OrderBy"
@@ -30,6 +31,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    
     
     [self initView];
     
@@ -163,12 +166,113 @@
                                 ],
                             
                             @[
+                                //出发城市
                                 @{
-                                    keyTitle : @"筛选",
-                                    }
-                                ],
+                                    @"title" : @"出发城市(单选)",
+                                    @"data" :  @[@{
+                                                     keyTitle : @"全部",
+                                                     },
+                                                 @{
+                                                     keyTitle : @"北京",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"上海",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"杭州",
+                                                     
+                                                     }]
+                                    },
+                                @{
+                                    @"title" : @"出发日期(单选)",
+                                    @"data" :  [DateHelper dateHelperGetCurrentMonthAndLater:[NSDate date]],
+                                    },
+
+                                @{
+                                    @"title" : @"游玩天数(多选)",
+                                    @"data" :  @[@{
+                                                     keyTitle : @"不限",
+                                                 },
+                                                 @{
+                                                     keyTitle : @"2日",
+                                                     
+                                                    },
+                                                 @{
+                                                     keyTitle : @"3日",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"4日",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"5日",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"6日",
+                                                     
+                                                     },@{
+                                                     keyTitle : @"7日",
+                                                     
+                                                     },@{
+                                                     keyTitle : @"8日",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"9日",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"10日",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"10日以上",
+                                                     
+                                                     }],
+                                    },
+                                @{
+                                    @"title" : @"价格区间(单选)",
+                                    @"data" :  @[@{
+                                                     keyTitle : @"不限",
+                                                     },
+                                                 @{
+                                                     keyTitle : @"200-500",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"500-1000",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"1000-2000",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"2000-3000",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"3000-5000",
+                                                     
+                                                     },@{
+                                                     keyTitle : @"5000-10000",
+                                                     
+                                                     },@{
+                                                     keyTitle : @"10000-20000",
+                                                     
+                                                     },
+                                                 @{
+                                                     keyTitle : @"20000以上",
+                                                     
+                                                     },
+                                                 ]
+                                    }]
                             
-                            ];
+                        ];
     }
     
     

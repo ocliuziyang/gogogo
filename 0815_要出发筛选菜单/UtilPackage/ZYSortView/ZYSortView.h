@@ -30,6 +30,8 @@ typedef void(^ClickMenuBlock)(ClickMenuBtnType menuBtnType);
 //点击菜单按钮回调
 @property (nonatomic, copy)ClickMenuBlock clickMenuBlock;
 - (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)menuCount;
+- (void)recoverSortBarBtnStatus;
+
 @end
 
 

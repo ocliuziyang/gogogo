@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CityCell" id="gTV-IL-0wX" customClass="CityCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="CityCell" text="北京" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ude-hB-OIK">
+                        <rect key="frame" x="20" y="0.0" width="245" height="44"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="muti_cell_n.png" translatesAutoresizingMaskIntoConstraints="NO" id="nhR-S4-uDs">
+                        <rect key="frame" x="285" y="12" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="ac4-3V-Dxv"/>
+                            <constraint firstAttribute="height" constant="20" id="g87-cg-Bzc"/>
+                        </constraints>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9xa-Ox-ywu">
+                        <rect key="frame" x="0.0" y="43.5" width="320" height="0.5"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.5" id="rqy-eO-or8"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="9xa-Ox-ywu" secondAttribute="trailing" id="737-fc-fKF"/>
+                <constraint firstItem="nhR-S4-uDs" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="8ax-qI-aCl"/>
+                <constraint firstItem="ude-hB-OIK" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="CVW-Yu-pkl"/>
+                <constraint firstItem="nhR-S4-uDs" firstAttribute="leading" secondItem="ude-hB-OIK" secondAttribute="trailing" constant="20" id="Dg6-61-ILU"/>
+                <constraint firstAttribute="bottom" secondItem="ude-hB-OIK" secondAttribute="bottom" id="GV3-QA-Y1k"/>
+                <constraint firstItem="ude-hB-OIK" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="JvC-32-JTT"/>
+                <constraint firstAttribute="trailing" secondItem="nhR-S4-uDs" secondAttribute="trailing" constant="15" id="LWH-nm-Qkv"/>
+                <constraint firstAttribute="bottom" secondItem="9xa-Ox-ywu" secondAttribute="bottom" id="MW0-xb-ZAE"/>
+                <constraint firstItem="9xa-Ox-ywu" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="S1X-Du-IN1"/>
+            </constraints>
+            <connections>
+                <outlet property="imgView" destination="nhR-S4-uDs" id="awA-Io-QQV"/>
+                <outlet property="titleLabel" destination="ude-hB-OIK" id="q2D-Ox-qHh"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="muti_cell_n.png" width="20" height="20"/>
+    </resources>
+</document>
