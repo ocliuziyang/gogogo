@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ZYSortMenuButton.h"
 #import "ZYMenuRadioCell.h"
+#import "ZYCustomView.h"
 
 #define SCREEN_WIDTH_ZY [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT_ZY [UIScreen mainScreen].bounds.size.height
@@ -22,6 +23,8 @@ typedef NS_ENUM(NSInteger, ClickMenuBtnType) {
 };
 
 typedef void(^ClickMenuBlock)(ClickMenuBtnType menuBtnType);
+
+
 @interface ZYSortBar : UIView
 //当前选中的按钮
 @property (nonatomic, assign) NSInteger currentSelectedIndex;
@@ -29,6 +32,9 @@ typedef void(^ClickMenuBlock)(ClickMenuBtnType menuBtnType);
 @property (nonatomic, assign) BOOL isShow;
 //点击菜单按钮回调
 @property (nonatomic, copy)ClickMenuBlock clickMenuBlock;
+
+
+
 - (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)menuCount;
 - (void)recoverSortBarBtnStatus;
 
@@ -73,6 +79,8 @@ typedef NS_ENUM(NSInteger, MenuType) {
 
 @interface ZYSortView : UIView
 @property (nonatomic, strong)ZYSortBar *sortBar;
+//ZYCustomView
+@property (nonatomic, strong)ZYCustomView *customView;
 @property (nonatomic, weak)id <ZYSortViewDelegate>delegate;
 - (instancetype)initWithFrame:(CGRect)frame withMenuCount:(NSInteger)count menuDataArray:(NSArray *)dataArray;
 

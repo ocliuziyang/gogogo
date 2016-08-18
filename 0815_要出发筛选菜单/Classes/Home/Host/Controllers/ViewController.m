@@ -40,6 +40,14 @@
     [self.view addSubview:sortView];//先添加到self,再设置代理,顺序不能乱
     sortView.delegate = self;
     
+    sortView.customView.selectedIndexPahtsBlock = ^(NSIndexPath *indexPathFirstRadio,
+                                                    NSIndexPath *indexPathSecRadio,
+                                                    NSMutableSet *indexPathSet,
+                                                    NSIndexPath *indexPathFourthRadio) {
+        
+        NSLog(@"%@-%@-%@-%@", indexPathFirstRadio, indexPathSecRadio, indexPathSet, indexPathFourthRadio);
+        
+    };
    
     
 }

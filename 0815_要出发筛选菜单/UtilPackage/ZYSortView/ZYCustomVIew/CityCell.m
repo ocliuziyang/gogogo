@@ -12,14 +12,15 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    [self setCellSelectedStatus:NO];
+    self.isselected = NO;
     
 }
 
 //设置选中状态
-- (void)setCellSelectedStatus:(BOOL)selected {
+
+- (void)setIsselected:(BOOL)isselected {
     
-    if (selected) {
+    if (isselected) {
         
         _titleLabel.textColor = [UIColor colorWithRed:0.22 green:0.81 blue:0.47 alpha:1.00];
         _imgView.image = [UIImage imageNamed:@"muti_cell_s"];
@@ -27,11 +28,13 @@
         
     } else {
         
-        _titleLabel.textColor = [UIColor colorWithRed:0.68 green:0.68 blue:0.68 alpha:1.00];
+        _titleLabel.textColor = [UIColor colorWithRed:0.41 green:0.41 blue:0.41 alpha:1.00];
         _imgView.image = [UIImage imageNamed:@"muti_cell_n"];
     }
     //记录当前选中状态
+    _isselected = isselected;
     
 }
+
 
 @end

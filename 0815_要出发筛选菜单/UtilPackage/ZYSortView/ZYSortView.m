@@ -242,7 +242,7 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
 @property (nonatomic, strong)NSArray *dataarray;
 @property (nonatomic, strong)UIView *maskView;
 
-@property (nonatomic, strong)ZYCustomView *customView;
+
 @end
 
 @implementation ZYSortView {
@@ -275,7 +275,7 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
         //多选collectionView(CustomView)
         
         _customView = [[ZYCustomView alloc]initWithFrame:CGRectMake(0, Y, SCREEN_WIDTH_ZY, SCREEN_HEIGHT_ZY - Y) dataArray:dataArray[2]];
-        _customView.backgroundColor = [UIColor whiteColor];
+        _customView.backgroundColor = [UIColor clearColor];
         //弱引用
         __weak typeof(self) weakSelf = self;
         //点击事件

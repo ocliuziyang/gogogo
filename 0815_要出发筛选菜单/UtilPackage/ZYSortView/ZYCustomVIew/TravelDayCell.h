@@ -14,5 +14,4 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (nonatomic, assign)BOOL isSelected;
 
-- (void)setStatus:(BOOL)isSelected;
 @end

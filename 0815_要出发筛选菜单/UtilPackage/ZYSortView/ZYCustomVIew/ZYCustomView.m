@@ -13,6 +13,7 @@
 
 #define GrayBorderColor [UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1.00]
 #define kCollectionViewHeaderViewHeight 30
+#define kLastCollectionViewFooterViewHeight 30
 #define viewH  45
 static NSString *cellIdentifier = @"TravelDayCell";
 static NSString *cityCellIdentifier = @"CityCell";
@@ -20,6 +21,10 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
 @implementation ZYCustomView {
     NSIndexPath *_indexPathFirstRadio;
     NSIndexPath *_indexPathSecRadio;
+    NSMutableSet *_indexPathSet;
+    NSIndexPath *_indexPathFourthRadio;
+    //当前选择的组
+    NSInteger _currentSection;
     //数据源
     NSArray *_dataArray;
 }
@@ -27,7 +32,7 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
+        [self initIndexPath];
         _dataArray = [dataArray copy];
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
@@ -38,6 +43,9 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
         [_collectionView registerNib:[UINib nibWithNibName:@"CityCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:cityCellIdentifier];
         //注册headerView头视图
         [_collectionView registerNib:[UINib nibWithNibName:@"ZYMutiSelectReusableView" bundle:[NSBundle mainBundle]] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:collectionViewReuseableHeaderViewIdentifier];
+        //注册footer伟视图
+        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:NSStringFromClass([UICollectionReusableView class])];
+        
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
         
@@ -46,6 +54,14 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
         [self addMaskView];
     }
     return self;
+}
+
+#pragma mark - initRecordIndexPath
+- (void)initIndexPath {
+    _indexPathFirstRadio = [NSIndexPath indexPathForItem:0 inSection:0];
+    _indexPathSecRadio = [NSIndexPath indexPathForItem:0 inSection:1];
+    _indexPathSet = [[NSMutableSet alloc]initWithObjects:[NSIndexPath indexPathForItem:0 inSection:2], nil];
+    _indexPathFourthRadio = [NSIndexPath indexPathForItem:0 inSection:3];
 }
 
 - (void)addConformView {
@@ -127,14 +143,148 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
         self.hidden = YES;
         
     }
+    
+    if (btn.tag == 200) {
+        [self initIndexPath];
+        [_collectionView reloadData];
+        self.hidden = YES;
+    }
+    
     //传递点击
     self.ensureBtnClickBlock(btn.tag);
+    //传递点击选中的数据
+    self.selectedIndexPahtsBlock(_indexPathFirstRadio, _indexPathSecRadio, _indexPathSet, _indexPathFourthRadio);
+    
+    
+    
 }
 
 
-#pragma mark - UICollectionViewDelegate
+#pragma mark - CollectionViewDelegate
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    _currentSection = indexPath.section;
+    
+    NSDictionary *dict = _dataArray[indexPath.section];
+    NSInteger rows = [dict[@"data"] count];
+    
+    NSLog(@"shouldSelectItemAtIndexPath");
+    switch (indexPath.section) {
+        case 0:
+        {
+            //记录点击
+            _indexPathFirstRadio = indexPath;
+            NSLog(@"_indexPathFirstRadio = %@", _indexPathFirstRadio);
+            for (int i = 0; i < rows; i++) {
+                CityCell *cell = (CityCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:indexPath.section]];
+                cell.isselected = NO;
+            }
+            //是当前点击显示
+            CityCell *cell = (CityCell *)[collectionView cellForItemAtIndexPath:indexPath];
+            cell.isselected = YES;
+            
+        }
+            break;
+        case 1:
+        {
+            //记录点击
+            _indexPathSecRadio = indexPath;
+            NSLog(@"_indexPathSecRadio = %@", _indexPathSecRadio);
+            for (int i = 0; i < rows; i++) {
+                TravelDayCell *cell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:indexPath.section]];
+                cell.isSelected = NO;
+            }
+            //是当前点击显示
+            TravelDayCell *cell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
+            cell.isSelected = YES;
+            
+        }
+            break;
+        case 2:
+        {
+            
+            
+           //检查nsset里面是否含有该indexPath
+            if ([_indexPathSet containsObject:indexPath]) {
+                //如果存在则删除
+                [_indexPathSet removeObject:indexPath];
+                //是当前点击显示
+                TravelDayCell *cell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
+                cell.isSelected = NO;
+            } else {
+                //添加到set
+                [_indexPathSet addObject:indexPath];
+                //是当前点击显示
+                TravelDayCell *cell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
+                cell.isSelected = YES;
+            }
+            
+            //点击 0 不限
+            if(indexPath.row == 0) {
+                _indexPathSet = [[NSMutableSet alloc]initWithObjects:[NSIndexPath indexPathForItem:0 inSection:2], nil];
+                [collectionView reloadSections:[NSIndexSet indexSetWithIndex:2]];
+            } else {
+                //去除不限
+                [_indexPathSet removeObject:[NSIndexPath indexPathForItem:0 inSection:indexPath.section]];
+                TravelDayCell *cell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
+                cell.isSelected = YES;
+                [collectionView reloadSections:[NSIndexSet indexSetWithIndex:2]];
+            }
+            
+            if(_indexPathSet.count == 0) {
+                _indexPathSet = [[NSMutableSet alloc]initWithObjects:[NSIndexPath indexPathForItem:0 inSection:2], nil];
+                [collectionView reloadSections:[NSIndexSet indexSetWithIndex:2]];
+            }
+            
+            NSLog(@"_indexPathSet = %@", _indexPathSet);
+            
+        }
+            break;
+
+        case 3:
+        {
+            //记录点击
+            _indexPathFourthRadio = indexPath;
+            NSLog(@"_indexPathFourthRadio = %@", _indexPathFourthRadio);
+            for (int i = 0; i < rows; i++) {
+                TravelDayCell *cell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:indexPath.section]];
+                cell.isSelected = NO;
+            }
+            //是当前点击显示
+            TravelDayCell *cell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
+            cell.isSelected = YES;
+            
+        }
+            break;
+
+            
+        default:
+            break;
+    }
+    
+    
+    return YES;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+     NSLog(@"didSelectItemAtIndexPath");
+    
+    
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSLog(@"shouldDeselectItemAtIndexPath");
+    
+    return YES;
+}
 
 
+
+#pragma mark - 设置制定cell状态
+
+
+#pragma mark - UICollectionViewDataSource
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return _dataArray.count;
 }
@@ -154,10 +304,10 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     if (indexPath.section == 0) {
         NSDictionary *dic = dataArray[indexPath.row];
         CityCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cityCellIdentifier forIndexPath:indexPath];
-        [cell setCellSelectedStatus:NO];
+        cell.isselected = NO;
         if(_indexPathFirstRadio.row == indexPath.row) {
             //显示为选中状态
-            [cell setCellSelectedStatus:YES];
+            cell.isselected = YES;
         }
         cell.titleLabel.text = dic[@"keyTitle"];
         
@@ -168,37 +318,67 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
         
       
         TravelDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-
+        cell.isSelected = NO;
         if (indexPath.row == 0) {
             cell.titleLabel.text = [NSString stringWithFormat:@"不限"];
         } else {
             NSDateComponents *components = dataArray[indexPath.row];
             cell.titleLabel.text = [NSString stringWithFormat:@"%ld月", components.month];
             NSLog(@"%ld  %ld", components.year, components.month);
+            
+            NSCalendar *calendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+            NSDateComponents *nowComponets = [calendar components:kCFCalendarUnitYear | kCFCalendarUnitMonth fromDate:[NSDate date]];
+            
+            if (components.year > nowComponets.year) {
+                cell.titleLabel.text = [NSString stringWithFormat:@"%ld年%ld月", components.year,components.month];
+//                cell.titleLabel.font = [UIFont systemFontOfSize:10];
+            }
+            
         }
         
-//        if (components) {
-//            <#statements#>
-//        }
+       
         //点击不同的section 保持当前 状态
         if(_indexPathSecRadio.row == indexPath.row) {
             //显示为选中状态
-            [cell setStatus:YES];
+            cell.isSelected = YES;
+            
         }
         
         return cell;
         
         
-    } else{
-
-        NSDictionary *dic = dataArray[indexPath.row];
+    } else if(indexPath.section == 3){
+        
         TravelDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+        cell.isSelected = NO;
+        if(_indexPathFourthRadio.row == indexPath.row) {
+            //显示为选中状态
+            cell.isSelected = YES;
+            
+        }
+        NSDictionary *dic = dataArray[indexPath.row];
         cell.titleLabel.text = dic[@"keyTitle"];
         return cell;
+        
+    } else if (indexPath.section == 2){
+        
+        
+        TravelDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+        cell.isSelected = NO;
+        
+        //若集合里有当前indexPath
+        if ([_indexPathSet containsObject:indexPath]) {
+            cell.isSelected = YES;
+        }
+        
+        NSDictionary *dic = dataArray[indexPath.row];
+        cell.titleLabel.text = dic[@"keyTitle"];
+        return cell;
+        
     }
     
     
-    
+    return nil;
     
 }
 
@@ -206,11 +386,13 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     
     if (kind == UICollectionElementKindSectionHeader) {
         ZYMutiSelectReusableView *reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:collectionViewReuseableHeaderViewIdentifier forIndexPath:indexPath];
-       NSDictionary *dict = _dataArray[indexPath.section];
+        NSDictionary *dict = _dataArray[indexPath.section];
         reusableView.titleLabel.text = dict[@"title"];
         return reusableView;
     } else {
-        return nil;
+        
+        UICollectionReusableView *view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:NSStringFromClass([UICollectionReusableView class]) forIndexPath:indexPath];
+        return view;
     }
     
 }
@@ -219,114 +401,7 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
 //- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
 //    
 //}
-#pragma mark - CollectionViewDelegate
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    NSLog(@"点击了 %ld section, %ld row", indexPath.section, indexPath.row);
-    switch (indexPath.section) {
-        case 0:
-        {
-            //记录当前点击位置
-            _indexPathFirstRadio = indexPath;
-            //显示为选中状态
-            CityCell *cell = (CityCell *)[collectionView cellForItemAtIndexPath:indexPath];
-            [cell setCellSelectedStatus:YES];
-            if (indexPath.row == 1 || indexPath.row == 2 || indexPath.row == 3) {
-                CityCell *cell = (CityCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-                [cell setCellSelectedStatus:NO];
-            }
-            //
-            TravelDayCell *dayCell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:_indexPathSecRadio];
-            [dayCell setStatus:YES];
-        }
-            break;
-        case 1:
-        {
-            CityCell *preCell =  (CityCell *)[collectionView cellForItemAtIndexPath:_indexPathFirstRadio];
-            [preCell setCellSelectedStatus:YES];
-            
-            //这里来写 出发日期 单选
-            TravelDayCell *dayCell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
-            [dayCell setStatus:YES];
-           
-            //记录index
-            _indexPathSecRadio = indexPath;
-            
-            if (indexPath.row != 0) {
-                 TravelDayCell *dayCell1 = (TravelDayCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
-               [dayCell1 setStatus:NO];
-            }
-            
-            
-        }
-            break;
-        case 2:
-        {
-            CityCell *preCell =  (CityCell *)[collectionView cellForItemAtIndexPath:_indexPathFirstRadio];
-            [preCell setCellSelectedStatus:YES];
-        }
-            break;
-        case 3:
-        {
-            CityCell *preCell =  (CityCell *)[collectionView cellForItemAtIndexPath:_indexPathFirstRadio];
-            [preCell setCellSelectedStatus:YES];
-        }
-            break;
-            
-        default:
-            break;
-    }
-    
-    
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    switch (indexPath.section) {
-        case 0:
-        {
-
-            //显示为选中状态
-            CityCell *cell = (CityCell *)[collectionView cellForItemAtIndexPath:indexPath];
-            [cell setCellSelectedStatus:NO];
-            //保持状态
-            TravelDayCell *dayCell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:_indexPathSecRadio];
-            
-            [dayCell setStatus:NO];
-            
-        }
-            break;
-        case 1:
-        {
-            CityCell *cell1 = (CityCell *)[collectionView cellForItemAtIndexPath:_indexPathFirstRadio];
-            [cell1 setCellSelectedStatus:NO];
-            //#########################
-            //这里来写 出发日期 单选
-            TravelDayCell *dayCell = (TravelDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
-            [dayCell setStatus:NO];
-            
-
-            
-        }
-            break;
-        case 2:
-        {
-            CityCell *cell1 = (CityCell *)[collectionView cellForItemAtIndexPath:_indexPathFirstRadio];
-            [cell1 setCellSelectedStatus:NO];
-        }
-            break;
-        case 3:
-        {
-            CityCell *cell1 = (CityCell *)[collectionView cellForItemAtIndexPath:_indexPathFirstRadio];
-            [cell1 setCellSelectedStatus:NO];
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
 
 
 #pragma mark - UIFlowLayoutDelegate
@@ -342,6 +417,27 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     
     if (indexPath.section == 3) {
         return CGSizeMake(95, 25);
+    }
+    
+    if (indexPath.section == 1) {
+        
+        
+        if (indexPath.row != 0) {
+            NSDictionary *dict = _dataArray[indexPath.section];
+            NSArray *dataArray = dict[@"data"];
+            NSDateComponents *components = dataArray[indexPath.row];
+            NSCalendar *calendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+            NSDateComponents *nowComponets = [calendar components:kCFCalendarUnitYear | kCFCalendarUnitMonth fromDate:[NSDate date]];
+            
+            if (components.year > nowComponets.year) {
+                return CGSizeMake(95, 25);
+            }
+        }
+        
+       
+
+        
+        return CGSizeMake(50, 25);
     }
     
     return CGSizeMake(50, 25);
@@ -367,9 +463,14 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     return CGSizeMake([UIScreen mainScreen].bounds.size.width, kCollectionViewHeaderViewHeight);
 }
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
-//    return CGSizeMake([UIScreen mainScreen].bounds.size.width, kCollectionViewHeaderViewHeight);
-//}
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
+    
+    if(section == 3) {
+        return CGSizeMake(SCREEN_WIDTH_ZY, kLastCollectionViewFooterViewHeight);
+    }
+    
+    return CGSizeZero;
+}
 
 
 

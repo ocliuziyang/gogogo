@@ -15,5 +15,5 @@
 
 @property (nonatomic, assign)BOOL isselected;
 
-- (void)setCellSelectedStatus:(BOOL)selected;
+
 @end
