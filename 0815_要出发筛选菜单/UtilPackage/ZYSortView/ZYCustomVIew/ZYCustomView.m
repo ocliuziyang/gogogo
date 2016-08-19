@@ -442,6 +442,7 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
         ZYMutiSelectReusableView *reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:collectionViewReuseableHeaderViewIdentifier forIndexPath:indexPath];
         NSDictionary *dict = _dataArray[indexPath.section];
         reusableView.titleLabel.text = dict[@"title"];
+        reusableView.imgView.image = [UIImage imageNamed:dict[@"imageName"]];
         return reusableView;
     } else {
         

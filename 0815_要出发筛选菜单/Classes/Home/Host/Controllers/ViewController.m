@@ -16,6 +16,10 @@
 #define keyTitle @"keyTitle"
 #define keyOrderBy @"OrderBy"
 #define kListCount 20
+
+#define keyID @"keyID"
+#define keyMinPrice @"keyMinPrice"
+#define keyMaxPrice @"keyMaxPrice"
 @interface ViewController ()<UITableViewDataSource, UITableViewDelegate, ZYSortViewDelegate>
 
 @property (nonatomic, strong)NSArray *dataArray;
@@ -128,8 +132,6 @@
     return _dataArray;
 }
 
-
-//菜单数据源
 - (NSArray *)menuDataSource {
     
     if (!_menuDataSource) {
@@ -176,111 +178,129 @@
                             @[
                                 //出发城市
                                 @{
-                                    @"title" : @"🚀出发城市(单选)",
+                                    @"title" : @"出发城市(单选)",
+                                    @"imageName" : @"emoji_sent_city",
                                     @"data" :  @[@{
                                                      keyTitle : @"全部",
+                                                     keyID : @0,
                                                      },
                                                  @{
                                                      keyTitle : @"北京",
-                                                     
+                                                     keyID : @401,
                                                      },
                                                  @{
                                                      keyTitle : @"上海",
-                                                     
+                                                     keyID : @402,
                                                      },
                                                  @{
                                                      keyTitle : @"杭州",
-                                                     
+                                                     keyID : @753,
                                                      }]
                                     },
                                 @{
-                                    @"title" : @"🗓出发日期(单选)",
+                                    @"title" : @"出发日期(单选)",
+                                    @"imageName" : @"emoji_sent_time",
                                     @"data" :  [DateHelper dateHelperGetCurrentMonthAndLater:[NSDate date]],
                                     },
-
+                                
                                 @{
-                                    @"title" : @"🚩游玩天数(多选)",
+                                    @"title" : @"游玩天数(多选)",
+                                    @"imageName" : @"emoji_travel_days",
                                     @"data" :  @[@{
                                                      keyTitle : @"不限",
-                                                 },
+                                                     keyID : @"0,",
+                                                     },
                                                  @{
                                                      keyTitle : @"2日",
-                                                     
-                                                    },
+                                                     keyID : @"2,",
+                                                     },
                                                  @{
                                                      keyTitle : @"3日",
-                                                     
+                                                     keyID : @"3,",
                                                      },
                                                  @{
                                                      keyTitle : @"4日",
-                                                     
+                                                     keyID : @"4,",
                                                      },
                                                  @{
                                                      keyTitle : @"5日",
-                                                     
+                                                     keyID : @"5,",
                                                      },
                                                  @{
                                                      keyTitle : @"6日",
-                                                     
+                                                     keyID : @"6,",
                                                      },@{
                                                      keyTitle : @"7日",
-                                                     
+                                                     keyID : @"7,",
                                                      },@{
                                                      keyTitle : @"8日",
-                                                     
+                                                     keyID : @"8,",
                                                      },
                                                  @{
                                                      keyTitle : @"9日",
-                                                     
+                                                     keyID : @"9,",
                                                      },
                                                  @{
                                                      keyTitle : @"10日",
-                                                     
+                                                     keyID : @"10,",
                                                      },
                                                  @{
                                                      keyTitle : @"10日以上",
-                                                     
+                                                     keyID : @"101,",
                                                      }],
                                     },
                                 @{
-                                    @"title" : @"💹价格区间¥(单选)",
+                                    @"title" : @"价格区间¥(单选)",
+                                    @"imageName" : @"emoji_price_range",
                                     @"data" :  @[@{
                                                      keyTitle : @"不限",
+                                                     keyMinPrice : @0,
+                                                     keyMaxPrice : @0
                                                      },
                                                  @{
                                                      keyTitle : @"200-500",
-                                                     
+                                                     keyMinPrice : @200,
+                                                     keyMaxPrice : @500
                                                      },
                                                  @{
                                                      keyTitle : @"500-1000",
-                                                     
+                                                     keyMinPrice : @500,
+                                                     keyMaxPrice : @1000
                                                      },
                                                  @{
                                                      keyTitle : @"1000-2000",
-                                                     
+                                                     keyMinPrice : @1000,
+                                                     keyMaxPrice : @2000
                                                      },
                                                  @{
                                                      keyTitle : @"2000-3000",
-                                                     
+                                                     keyMinPrice : @2000,
+                                                     keyMaxPrice : @3000
                                                      },
                                                  @{
                                                      keyTitle : @"3000-5000",
-                                                     
-                                                     },@{
+                                                     keyMinPrice : @3000,
+                                                     keyMaxPrice : @5000
+                                                     },
+                                                 @{
                                                      keyTitle : @"5000-10000",
-                                                     
-                                                     },@{
+                                                     keyMinPrice : @5000,
+                                                     keyMaxPrice : @10000
+                                                     },
+                                                 @{
                                                      keyTitle : @"10000-20000",
-                                                     
+                                                     keyMinPrice : @10000,
+                                                     keyMaxPrice : @20000
                                                      },
                                                  @{
                                                      keyTitle : @"20000以上",
-                                                     
+                                                     keyMinPrice : @20000,
+                                                     keyMaxPrice : @0
                                                      },
                                                  ]
                                     }]
                             
-                        ];
+                            ];
     }
     
     

@@ -12,19 +12,29 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="出发城市(单选)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aws-5K-BjJ">
-                    <rect key="frame" x="15" y="0.0" width="285" height="30"/>
+                    <rect key="frame" x="33" y="0.0" width="267" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2au-bz-zdg">
+                    <rect key="frame" x="10" y="3.5" width="20" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="20" id="7xS-dW-wBh"/>
+                        <constraint firstAttribute="height" constant="22" id="sh7-Cl-TUg"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="aws-5K-BjJ" secondAttribute="bottom" id="0e0-3m-DK5"/>
-                <constraint firstItem="aws-5K-BjJ" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" constant="15" id="Z6C-A7-VEs"/>
-                <constraint firstItem="aws-5K-BjJ" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="afL-u5-Ory"/>
-                <constraint firstAttribute="trailing" secondItem="aws-5K-BjJ" secondAttribute="trailing" constant="20" id="tfm-2k-uPj"/>
+                <constraint firstItem="aws-5K-BjJ" firstAttribute="leading" secondItem="2au-bz-zdg" secondAttribute="trailing" constant="3" id="8sV-9b-7L9"/>
+                <constraint firstItem="aws-5K-BjJ" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="VTA-Fy-1Jh"/>
+                <constraint firstAttribute="bottom" secondItem="aws-5K-BjJ" secondAttribute="bottom" id="hdR-CS-YaL"/>
+                <constraint firstAttribute="trailing" secondItem="aws-5K-BjJ" secondAttribute="trailing" constant="20" id="io0-nh-suO"/>
+                <constraint firstItem="2au-bz-zdg" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" constant="10" id="oVk-oF-zCA"/>
+                <constraint firstItem="2au-bz-zdg" firstAttribute="centerY" secondItem="U6b-Vx-4bR" secondAttribute="centerY" id="tqR-zc-ulz"/>
             </constraints>
             <connections>
+                <outlet property="imgView" destination="2au-bz-zdg" id="hiQ-IG-Uib"/>
                 <outlet property="titleLabel" destination="aws-5K-BjJ" id="H3G-qW-392"/>
             </connections>
         </collectionReusableView>
