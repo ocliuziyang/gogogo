@@ -12,6 +12,8 @@
 #define SCREEN_HEIGHT_ZY [UIScreen mainScreen].bounds.size.height
 typedef void(^EnsureBtnClickBlock)(NSInteger btnTag);
 
+typedef void(^MaskViewTap)();
+
 typedef void(^SelectedIndexPathsBlock)(NSIndexPath *indexPathFirstRadio,
                                        NSIndexPath *indexPathSecRadio,
                                        NSMutableSet *indexPathSet,
@@ -22,6 +24,9 @@ typedef void(^SelectedIndexPathsBlock)(NSIndexPath *indexPathFirstRadio,
 @property (nonatomic, copy)EnsureBtnClickBlock ensureBtnClickBlock;
 
 @property (nonatomic, copy)SelectedIndexPathsBlock selectedIndexPahtsBlock;
+
+//点击背景蒙版回调
+@property (nonatomic, copy)MaskViewTap maskViewTap;
 
 @property (nonatomic, assign)BOOL show;
 

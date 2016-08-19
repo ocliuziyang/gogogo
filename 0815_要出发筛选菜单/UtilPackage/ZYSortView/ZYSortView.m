@@ -285,12 +285,16 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
                 weakSelf.customView.show = NO;
                 [weakSelf.sortBar recoverSortBarBtnStatus];
             }
+
+    
+            NSLog(@"block回调点击了292line-----%ld", btnTag);
             
-            if (btnTag == 300) {
-                [weakSelf.sortBar recoverSortBarBtnStatus];
-            }
+        };
+        
+        _customView.maskViewTap = ^{
+        
             
-            NSLog(@"block回调点击了%ld", btnTag);
+            [weakSelf.sortBar recoverSortBarBtnStatus];
             
         };
         

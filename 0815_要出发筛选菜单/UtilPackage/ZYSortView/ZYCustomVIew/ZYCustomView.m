@@ -127,7 +127,7 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     //添加tag值
     maskView.tag = 300;
     //添加tap事件
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenCollectionView)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapMaskViewhiddenCollectionView)];
     [maskView addGestureRecognizer:tap];
     [self addSubview:maskView];
 }
@@ -140,10 +140,18 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     _indexPathSet = _tempIndexPathSet;
     _indexPathFourthRadio = _tempIndexPathFourthRadio;
     self.show = NO;
-    //按钮恢复灰色
-    self.ensureBtnClickBlock(300);
+   
 }
 
+
+- (void)tapMaskViewhiddenCollectionView {
+    _indexPathFirstRadio = _tempIndexPathFirstRadio;
+    _indexPathSecRadio = _tempIndexPathSecRadio;
+    _indexPathSet = _tempIndexPathSet;
+    _indexPathFourthRadio = _tempIndexPathFourthRadio;
+    self.show = NO;
+    self.maskViewTap();
+}
 
 //视图显示的时候调用
 - (void)setShow:(BOOL)show {
