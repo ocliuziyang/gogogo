@@ -23,6 +23,13 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     NSIndexPath *_indexPathSecRadio;
     NSMutableSet *_indexPathSet;
     NSIndexPath *_indexPathFourthRadio;
+    
+    //记录temp初始
+    NSIndexPath *_tempIndexPathFirstRadio;
+    NSIndexPath *_tempIndexPathSecRadio;
+    NSMutableSet *_tempIndexPathSet;
+    NSIndexPath *_tempIndexPathFourthRadio;
+    
     //当前选择的组
     NSInteger _currentSection;
     //数据源
@@ -62,6 +69,10 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     _indexPathSecRadio = [NSIndexPath indexPathForItem:0 inSection:1];
     _indexPathSet = [[NSMutableSet alloc]initWithObjects:[NSIndexPath indexPathForItem:0 inSection:2], nil];
     _indexPathFourthRadio = [NSIndexPath indexPathForItem:0 inSection:3];
+
+    
+    _tempIndexPathSet = [[NSMutableSet alloc]initWithObjects:[NSIndexPath indexPathForItem:0 inSection:2], nil];
+    
 }
 
 - (void)addConformView {
@@ -116,17 +127,41 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     //添加tag值
     maskView.tag = 300;
     //添加tap事件
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenCollectionView:)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenCollectionView)];
     [maskView addGestureRecognizer:tap];
     [self addSubview:maskView];
 }
 
 #pragma mark - EventResponse
-- (void)hiddenCollectionView:(UITapGestureRecognizer *)tap {
+//取消选择  恢复之前选择 隐藏视图
+- (void)hiddenCollectionView {
+    _indexPathFirstRadio = _tempIndexPathFirstRadio;
+    _indexPathSecRadio = _tempIndexPathSecRadio;
+    _indexPathSet = _tempIndexPathSet;
+    _indexPathFourthRadio = _tempIndexPathFourthRadio;
+    self.show = NO;
 
-    
-    self.ensureBtnClickBlock(tap.view.tag);
 }
+
+
+//视图显示的时候调用
+- (void)setShow:(BOOL)show {
+    
+    _show = show;
+    self.hidden = !show;
+    if (show) {
+        //记录初始的indexPath
+        //记录temp初始
+        _tempIndexPathFirstRadio = [NSIndexPath indexPathForItem:_indexPathFirstRadio.item inSection:_indexPathFirstRadio.section];
+        _tempIndexPathSecRadio = [NSIndexPath indexPathForItem:_indexPathSecRadio.item inSection:_indexPathSecRadio.section];
+        _tempIndexPathSet = [_indexPathSet mutableCopy];
+        _tempIndexPathFourthRadio = [NSIndexPath indexPathForItem:_indexPathFourthRadio.item inSection:_indexPathFourthRadio.section];
+        
+        [_collectionView reloadData];
+    }
+    
+}
+
 
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -141,6 +176,10 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     if (btn.tag == 100) {
         //点击确定
         self.hidden = YES;
+        //传递点击
+        self.ensureBtnClickBlock(btn.tag);
+        //传递点击选中的数据
+        self.selectedIndexPahtsBlock(_indexPathFirstRadio, _indexPathSecRadio, _indexPathSet, _indexPathFourthRadio);
         
     }
     
@@ -148,16 +187,22 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
         [self initIndexPath];
         [_collectionView reloadData];
         self.hidden = YES;
+        //传递点击
+        self.ensureBtnClickBlock(btn.tag);
+        //传递点击选中的数据
+        self.selectedIndexPahtsBlock(_indexPathFirstRadio, _indexPathSecRadio, _indexPathSet, _indexPathFourthRadio);
+        
     }
     
-    //传递点击
-    self.ensureBtnClickBlock(btn.tag);
-    //传递点击选中的数据
-    self.selectedIndexPahtsBlock(_indexPathFirstRadio, _indexPathSecRadio, _indexPathSet, _indexPathFourthRadio);
-    
-    
+
     
 }
+
+
+
+
+
+
 
 
 #pragma mark - CollectionViewDelegate
@@ -412,11 +457,11 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     }
     
     if(indexPath.row == 10) {
-        return CGSizeMake(80, 25);
+        return CGSizeMake(80, 35);
     }
     
     if (indexPath.section == 3) {
-        return CGSizeMake(95, 25);
+        return CGSizeMake(95, 35);
     }
     
     if (indexPath.section == 1) {
@@ -430,17 +475,17 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
             NSDateComponents *nowComponets = [calendar components:kCFCalendarUnitYear | kCFCalendarUnitMonth fromDate:[NSDate date]];
             
             if (components.year > nowComponets.year) {
-                return CGSizeMake(95, 25);
+                return CGSizeMake(95, 35);
             }
         }
         
        
 
         
-        return CGSizeMake(50, 25);
+        return CGSizeMake(55, 35);
     }
     
-    return CGSizeMake(50, 25);
+    return CGSizeMake(55, 35);
     
 }
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
@@ -458,6 +503,11 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     return 10;
 }
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    
+    if (section == 3) {
+        return 1;
+    }
+    
     return 5;
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {

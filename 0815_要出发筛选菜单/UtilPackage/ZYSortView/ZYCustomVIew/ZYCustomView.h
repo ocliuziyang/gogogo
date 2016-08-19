@@ -23,5 +23,11 @@ typedef void(^SelectedIndexPathsBlock)(NSIndexPath *indexPathFirstRadio,
 
 @property (nonatomic, copy)SelectedIndexPathsBlock selectedIndexPahtsBlock;
 
+@property (nonatomic, assign)BOOL show;
+
 - (instancetype)initWithFrame:(CGRect)frame dataArray:(NSArray *)dataArray;
+
+//取消选择  恢复之前选择 隐藏视图
+- (void)hiddenCollectionView;
+
 @end

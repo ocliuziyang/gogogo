@@ -281,8 +281,8 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
         //点击事件
         _customView.ensureBtnClickBlock = ^(NSInteger btnTag) {
           // resetBtn.tag = 200; ensureBtn.tag = 100;  // tap.view.tag = 300;
-            if (btnTag == 100 || btnTag == 300) {
-                weakSelf.customView.hidden = YES;
+            if (btnTag == 100 || btnTag == 200 || btnTag == 300) {
+                weakSelf.customView.show = NO;
                 [weakSelf.sortBar recoverSortBarBtnStatus];
             }
             
@@ -318,7 +318,7 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
                 case ClickMenuBtnTypeSec:
                 {
                     //隐藏多选视图
-                     weakSelf.customView.hidden = YES;
+                     weakSelf.customView.show = NO;
                     //这里来判断点击的时候如果 重复点击的是当前视图
                     if (_currentClickMenuBtnType == menuBtnType) {
                         weakSelf.sortMenuView.hidden = !weakSelf.sortMenuView.hidden;
@@ -338,10 +338,16 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
                     weakSelf.sortMenuView.hidden = YES;
                     //这里来判断点击的时候如果 重复点击的是当前视图
                     if (_currentClickMenuBtnType == menuBtnType) {
-                        weakSelf.customView.hidden = !weakSelf.customView.hidden;
+                        weakSelf.customView.show = !weakSelf.customView.show;
+                        if(weakSelf.customView.show == NO) {
+                            [weakSelf.customView hiddenCollectionView];
+                        }
                     } else {
-                        //当前视图正在显示, 又去点击其他视图
-                        weakSelf.customView.hidden = NO;
+                        if(weakSelf.customView.show == NO) {
+                            [weakSelf.customView hiddenCollectionView];
+                        }
+                        //之前视图正在显示, 又去点击 当前
+                        weakSelf.customView.show = YES;
                         _currentClickMenuBtnType = menuBtnType;
                     }
                     
