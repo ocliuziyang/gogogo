@@ -281,8 +281,12 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
         //点击事件
         _customView.ensureBtnClickBlock = ^(NSInteger btnTag) {
           // resetBtn.tag = 200; ensureBtn.tag = 100;  // tap.view.tag = 300;
-            if (btnTag == 100 || btnTag == 200 || btnTag == 300) {
+            if (btnTag == 100 || btnTag == 200) {
                 weakSelf.customView.show = NO;
+                [weakSelf.sortBar recoverSortBarBtnStatus];
+            }
+            
+            if (btnTag == 300) {
                 [weakSelf.sortBar recoverSortBarBtnStatus];
             }
             
@@ -389,6 +393,8 @@ static NSString * const zyMenuRadioCell = @"ZYMenuRadioCell";
     //恢复菜单按钮选中色
     [self recoverSortBarBtnStatus];
     self.sortMenuView.hidden = YES;
+    
+    
     
 }
 

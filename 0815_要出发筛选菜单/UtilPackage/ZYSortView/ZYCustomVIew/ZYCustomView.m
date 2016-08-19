@@ -140,7 +140,8 @@ static NSString *collectionViewReuseableHeaderViewIdentifier = @"ZYMutiSelectReu
     _indexPathSet = _tempIndexPathSet;
     _indexPathFourthRadio = _tempIndexPathFourthRadio;
     self.show = NO;
-
+    //按钮恢复灰色
+    self.ensureBtnClickBlock(300);
 }
 
 
